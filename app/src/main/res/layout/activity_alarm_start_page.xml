@@ -37,12 +37,12 @@
             tools:ignore="UselessParent">
 
             <Button
-                android:id="@+id/dummy_button"
+                android:id="@+id/remCreateButton"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/dummy_button" />
+                android:text="Make the Alarm!" />
 
         </LinearLayout>
 
@@ -50,7 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Welcome to REM.my, your instant rem alarm creator."
+            android:text="Welcome to REM.my, your instant REM alarm creator."
+            android:gravity="center"
             android:id="@+id/topTextBox"
             android:layout_gravity="left|top" />
     </FrameLayout>
