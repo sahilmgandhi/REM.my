@@ -1,14 +1,22 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
     tools:context="com.sahilmgandhi.remmy.AlarmStartPage">
 
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    tools:context="com.sahilmgandhi.remmy.AlarmStartPage">-->
+
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
-    <TextView
+    <!--<TextView
         android:id="@+id/fullscreen_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,16 +25,16 @@
         android:text="@string/dummy_content"
         android:textColor="#33b5e5"
         android:textSize="50sp"
-        android:textStyle="bold" />
+        android:textStyle="bold" /> -->
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
-    <FrameLayout
+   <!-- <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true">-->
 
-        <LinearLayout
+       <!-- <LinearLayout
             android:id="@+id/fullscreen_content_controls"
             style="?metaButtonBarStyle"
             android:layout_width="match_parent"
@@ -36,24 +44,55 @@
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
-            <Button
-                android:id="@+id/remCreateButton"
-                style="?metaButtonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Make the Alarm!!" />
+        </LinearLayout>-->
 
-        </LinearLayout>
-
-        <TextView
+       <!-- <TextView
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Welcome to REM.my, your instant REM alarm creator."
             android:gravity="center"
             android:id="@+id/topTextBox"
-            android:layout_gravity="left|top" />
-    </FrameLayout>
+            android:layout_gravity="left|top" />-->
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="67dp"
+            android:text="Click To Make The Alarm"
+            android:id="@+id/remCreateButton"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:background="#737373"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Adjust the clock below to the LATEST time that you wish to wake up. Then click the button below to create an alarm that is optimized to your REM sleep. The alarm takes into account that it will take you 15 minutes to fall asleep."
+            android:id="@+id/Instructions"
+            android:layout_gravity="right|top"
+            android:gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:textColor="#030303"
+            android:textSize="17dp"
+            android:textIsSelectable="false" />
+
+    <TimePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/timePicker"
+        android:layout_gravity="center"
+        android:layout_above="@+id/remCreateButton"
+        android:layout_alignParentStart="true"
+        android:amPmBackgroundColor="#6c6767"
+    />
+</RelativeLayout>
+
+
+  <!--  </FrameLayout>
 
 </FrameLayout>
+-->
