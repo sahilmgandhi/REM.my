@@ -85,10 +85,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/timePicker"
         android:layout_gravity="center"
+        android:amPmBackgroundColor="#6c6767"
         android:layout_above="@+id/remCreateButton"
         android:layout_alignParentStart="true"
-        android:amPmBackgroundColor="#6c6767"
-    />
+        android:layout_marginBottom="31dp" />
 </RelativeLayout>
 
 

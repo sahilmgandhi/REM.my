@@ -1,6 +1,9 @@
 package com.sahilmgandhi.remmy;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,25 +15,74 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TimePicker;
 import android.graphics.PorterDuff;
+import java.util.Calendar;
 
 
 public class AlarmStartPage extends AppCompatActivity
 {
+    Button remMaker;
+    TimePicker getAlarmTime;
+
+    TimePickerDialog alarmTimeDialog;
 
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_start_page);
 
-        Button remMaker = (Button) findViewById(R.id.remCreateButton);
+        remMaker = (Button) findViewById(R.id.remCreateButton);
+        getAlarmTime = (TimePicker) findViewById(R.id.timePicker);
+
+
 
         remMaker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+                openTimePickerDialog(false);
+                //Calendar c = Calendar.getInstance();
+                //c.set(getAlarmTime.getHour(), getAlarmTime.getMinute(), 00);
+                //setAlarm(c);
             }
         });
     }
+
+    private void openTimePickerDialog(boolean is24r)
+    {
+        Calendar cal = Calendar.getInstance();
+        alarmTimeDialog = new TimePickerDialog(AlarmStartPage.this, onTimeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), is24r);
+
+        alarmTimeDialog.setTitle("Set Alarm Time");
+
+        alarmTimeDialog.show();
+    }
+
+    OnTimeSetListener onTimeSetListener = new OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            Calendar currCal = Calendar.getInstance();
+            Calendar setCal = (Calendar) currCal.clone();
+
+            setCal.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            setCal.set()
+        }
+    }
+
+
+    /*private void setAlarm(Calendar cal)
+    {
+
+    }*/
+
+
+    /*public static class TimePickerFragment implements TimePickerDialog.onTimeSetListener
+    {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState)
+        {
+
+        }
+    }*/
+
 }
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
