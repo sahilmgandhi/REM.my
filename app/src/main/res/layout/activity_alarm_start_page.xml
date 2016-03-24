@@ -55,18 +55,7 @@
             android:id="@+id/topTextBox"
             android:layout_gravity="left|top" />-->
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="67dp"
-            android:text="Click To Make The Alarm"
-            android:id="@+id/remCreateButton"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:background="#737373"
-            />
-
-        <TextView
+    <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
@@ -80,15 +69,23 @@
             android:textSize="17dp"
             android:textIsSelectable="false" />
 
-    <TimePicker
-        android:layout_width="match_parent"
+    <ToggleButton
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/timePicker"
-        android:layout_gravity="center"
-        android:amPmBackgroundColor="#6c6767"
-        android:layout_above="@+id/remCreateButton"
+        android:text="New ToggleButton"
+        android:id="@+id/toggleAlarmButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <TimePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alarmTimePicker"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="31dp" />
+        android:layout_marginTop="51dp"
+        android:layout_below="@id/Instructions"
+        />
+
 </RelativeLayout>
 
 
