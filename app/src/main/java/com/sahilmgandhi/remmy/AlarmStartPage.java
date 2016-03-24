@@ -22,11 +22,12 @@ public class AlarmStartPage extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_start_page);
 
-        final Button remMaker = (Button) findViewById(R.id.remCreateButton);
+        Button remMaker = (Button) findViewById(R.id.remCreateButton);
+
         remMaker.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                remMaker.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            public void onClick(View view) {
+                
             }
         });
     }
