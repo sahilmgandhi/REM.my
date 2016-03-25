@@ -3,63 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:background="#80dcfe"
     tools:context="com.sahilmgandhi.remmy.AlarmStartPage">
-
-<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#0099cc"
-    tools:context="com.sahilmgandhi.remmy.AlarmStartPage">-->
-
-    <!-- The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc. -->
-    <!--<TextView
-        android:id="@+id/fullscreen_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:keepScreenOn="true"
-        android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
-        android:textStyle="bold" /> -->
-
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-   <!-- <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">-->
-
-       <!-- <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            style="?metaButtonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent">
-
-        </LinearLayout>-->
-
-       <!-- <TextView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Welcome to REM.my, your instant REM alarm creator."
-            android:gravity="center"
-            android:id="@+id/topTextBox"
-            android:layout_gravity="left|top" />-->
 
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Adjust the clock below to the LATEST time that you wish to wake up. Then click the button below to create an alarm that is optimized to your REM sleep. The alarm takes into account that it will take you 15 minutes to fall asleep."
+            android:text="Adjust the clock below to the LATEST time that you wish to wake up. Then click the button below to create an alarm that is optimized to your REM sleep. The alarm takes into account that it will take you 15 minutes to fall asleep. Please turn your ringtone volume to the maximum."
             android:id="@+id/Instructions"
             android:layout_gravity="right|top"
             android:gravity="center"
@@ -82,15 +33,20 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/alarmTimePicker"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="This text will change once you set a timer."
+        android:id="@+id/alarmStatus"
+        android:gravity="center"
+        android:textColor="#070707"
+        android:textIsSelectable="false"
+        android:layout_above="@+id/toggleAlarmButton"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="51dp"
-        android:layout_below="@id/Instructions"
-        />
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
-
-
-  <!--  </FrameLayout>
-
-</FrameLayout>
--->
