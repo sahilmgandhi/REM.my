@@ -1,17 +1,11 @@
 package com.sahilmgandhi.remmy;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
-import android.app.TimePickerDialog.OnTimeSetListener;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -76,7 +70,74 @@ public class AlarmStartPage extends Activity
                 minuteToSet = alrmTimePicker.getMinute();
                 // this is the code to actually do the "magic" of the REM time
                 int currhr = calendar.get(Calendar.HOUR_OF_DAY);
-                int currsec = calendar.get(Calendar.MINUTE);
+                int currmin = calendar.get(Calendar.MINUTE);
+
+                currmin+=15;
+                if (currmin >= 60)
+                {
+                    currmin = currmin%60;
+                    currhr++;
+                    if (currhr >= 24)
+                    {
+                        currhr = currhr%24;
+                    }
+                }
+                boolean lessThan90 = false;
+                int hrDiff = 0;
+                int minDiff = 0;
+                if (hourToSet >= currhr)
+                {
+                    hrDiff = hourToSet - currhr;
+                    if (hrDiff == 0)                // if the alarm is set for the same hour
+                    {
+                        if (minuteToSet > currmin)      // if the alarm is set for a later time (which means that it is less than 90 minutes away)
+                        {
+                            minDiff = minuteToSet - currmin;
+                        }
+                        else                            // otherwise the alarm is set for 23 hours and some minutes away
+                        {
+                            minDiff = 60-currmin + minuteToSet;
+                            hrDiff = 23;                // 23 hours and minDiff away!
+                        }
+                    }
+                    else
+                    {
+                        minDiff = 60-currmin + minuteToSet;
+                    }
+                }
+                else if (hourToSet < currhr)
+                {
+                    hrDiff = 24-currhr + hourToSet;
+                }
+
+                int totalMinutesInBetween = 60*hrDiff + minDiff;
+
+                if (totalMinutesInBetween < 90)
+                {
+                    lessThan90 = true;
+                }
+                if (!lessThan90)            // If there are more than 90 minutes of difference, then a REM cycle is ACTUALLY possible
+                {
+                    int possibleRem = totalMinutesInBetween/90;
+                    for (int i = 0; i < possibleRem; i++)
+                    {
+                        currhr++;
+                        if (currhr >= 24)
+                            currhr = currhr%24;
+                        currmin+=30;
+                        if (currmin >= 60)
+                        {
+                            currmin = currmin%60;
+                            currhr++;
+                            if (currhr >= 24)
+                            {
+                                currhr = currhr%24;
+                            }
+                        }
+                    }
+                    hourToSet = currhr;
+                    minuteToSet = currmin;
+                }
 
                 calendar.set(Calendar.HOUR_OF_DAY, hourToSet);
                 calendar.set(Calendar.MINUTE, minuteToSet);
@@ -88,8 +149,74 @@ public class AlarmStartPage extends Activity
 
                 // this is the code to actually do the "magic" of the REM times
                 int currhr = calendar.get(Calendar.HOUR_OF_DAY);
-                int currsec = calendar.get(Calendar.MINUTE);
+                int currmin = calendar.get(Calendar.MINUTE);
 
+                currmin+=15;
+                if (currmin >= 60)
+                {
+                    currmin = currmin%60;
+                    currhr++;
+                    if (currhr >= 24)
+                    {
+                        currhr = currhr%24;
+                    }
+                }
+                boolean lessThan90 = false;
+                int hrDiff = 0;
+                int minDiff = 0;
+                if (hourToSet >= currhr)
+                {
+                    hrDiff = hourToSet - currhr;
+                    if (hrDiff == 0)                // if the alarm is set for the same hour
+                    {
+                        if (minuteToSet > currmin)      // if the alarm is set for a later time (which means that it is less than 90 minutes away)
+                        {
+                            minDiff = minuteToSet - currmin;
+                        }
+                        else                            // otherwise the alarm is set for 23 hours and some minutes away
+                        {
+                            minDiff = 60-currmin + minuteToSet;
+                            hrDiff = 23;                // 23 hours and minDiff away!
+                        }
+                    }
+                    else
+                    {
+                        minDiff = 60-currmin + minuteToSet;
+                    }
+                }
+                else if (hourToSet < currhr)
+                {
+                    hrDiff = 24-currhr + hourToSet;
+                }
+
+                int totalMinutesInBetween = 60*hrDiff + minDiff;
+
+                if (totalMinutesInBetween < 90)
+                {
+                    lessThan90 = true;
+                }
+                if (!lessThan90)            // If there are more than 90 minutes of difference, then a REM cycle is ACTUALLY possible
+                {
+                    int possibleRem = totalMinutesInBetween/90;
+                    for (int i = 0; i < possibleRem; i++)
+                    {
+                        currhr++;
+                        if (currhr >= 24)
+                            currhr = currhr%24;
+                        currmin+=30;
+                        if (currmin >= 60)
+                        {
+                            currmin = currmin%60;
+                            currhr++;
+                            if (currhr >= 24)
+                            {
+                                currhr = currhr%24;
+                            }
+                        }
+                    }
+                    hourToSet = currhr;
+                    minuteToSet = currmin;
+                }
                 calendar.set(Calendar.HOUR_OF_DAY, hourToSet);
                 calendar.set(Calendar.MINUTE, minuteToSet);
             }
@@ -114,109 +241,8 @@ public class AlarmStartPage extends Activity
         alrmStatusView.setText(textToShow);
     }
 
-    /*public void onDestroy()
+    public void onDestroy()
     {
         super.onDestroy();
     }
-*/
-
 }
-
-
-/*public class AlarmStartPage extends AppCompatActivity
-{
-    Button remMaker;
-
-    TimePickerDialog alarmTimeDialog;
-
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm_start_page);
-
-        remMaker = (Button) findViewById(R.id.remCreateButton);
-
-        remMaker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar c = Calendar.getInstance();
-                int hour = c.HOUR_OF_DAY;                           // these are the system hour and minute
-                int minutes = c.MINUTE;
-                openTimePickerDialog(false, hour, minutes);
-
-                //Calendar c = Calendar.getInstance();
-                //c.set(getAlarmTime.getHour(), getAlarmTime.getMinute(), 00);
-                //setAlarm(c);
-            }
-        });
-    }
-
-    private void openTimePickerDialog(boolean is24r, int sysHour, int sysMin)
-    {
-        Calendar cal = Calendar.getInstance();
-        *//*int hour = cal.HOUR_OF_DAY;               // we actually NEED to get the system time ... and then perform the REM time shift on it!
-        int minutes = cal.MINUTE;
-        boolean increaseDay = false;
-        if (minutes + 15 >= 60)
-        {
-            hour++;
-            minutes = minutes% 60;
-
-            if (hour >= 24)
-            {
-                increaseDay = true;
-                hour = hour% 24;
-            }
-        }*//*
-        alarmTimeDialog = new TimePickerDialog(AlarmStartPage.this, onTimeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), is24r);
-
-        alarmTimeDialog.setTitle("Set Alarm Time");
-
-        alarmTimeDialog.show();
-    }
-
-    OnTimeSetListener onTimeSetListener = new OnTimeSetListener()
-    {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute)
-        {
-            Calendar currCal = Calendar.getInstance();
-            Calendar setCal = (Calendar) currCal.clone();
-
-            setCal.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            setCal.set(Calendar.MINUTE, minute);
-            setCal.set(Calendar.SECOND, 0);
-            setCal.set(Calendar.MILLISECOND,0);
-
-            if (setCal.compareTo(currCal) <= 0)
-            {
-                setCal.add(Calendar.DATE, 1);
-            }
-            setAlarm(setCal);
-        }
-    };
-
-    private void setAlarm(Calendar targetCal)
-    {
-        Intent intent = new Intent(getBaseContext(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getBaseContext(), 1, intent, 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, targetCal.getTimeInMillis(), pendingIntent);
-    }
-
-    *//*private void setAlarm(Calendar cal)
-    {
-
-    }*//*
-
-
-    *//*public static class TimePickerFragment implements TimePickerDialog.onTimeSetListener
-    {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState)
-        {
-
-        }
-    }*//*
-
-}*/

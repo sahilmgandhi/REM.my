@@ -24,8 +24,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver
     @Override
     public void onReceive(final Context context, Intent intent) {
 
-        AlarmStartPage inst = AlarmStartPage.instance();
-        inst.setAlarmText("Alarm is ringing!! Wake up!!");
+       /* AlarmStartPage inst = AlarmStartPage.instance();
+        inst.setAlarmText("Alarm is ringing!! Wake up!!");*/
 
         //this will sound the alarm tone
         //this will sound the alarm once, if you wish to
