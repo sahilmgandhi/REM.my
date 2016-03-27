@@ -1,22 +1,14 @@
 package com.sahilmgandhi.remmy;
 
-import android.app.Activity;
+import android.app.Activity;                            // all the imports that my application needs to run smoothly
 import android.app.AlarmManager;
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.widget.AppCompatAutoCompleteTextView;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TimePicker;
-import android.graphics.PorterDuff;
 import java.util.Calendar;
 import android.util.Log;
 import android.widget.TextView;
@@ -27,50 +19,74 @@ import android.widget.ToggleButton;
 public class AlarmStartPage extends Activity
 {
     AlarmManager alrmMgr;
-    private PendingIntent pendInt;
+    private PendingIntent pendInt;                          // initialize all the private member variables required for the app
     private TimePicker alrmTimePicker;
     private static AlarmStartPage inst;
     private Intent myIntent;
     private TextView alrmStatusView;
 
-    public static AlarmStartPage instance()
+    protected static AlarmStartPage instance()
     {
-        return inst;
+        return inst;                                        // returns an instance of the current Activity
     }
 
     @Override
     public void onStart()
     {
-        super.onStart();
+        super.onStart();                                    // calls the super classes onStart, and then sets the instance to the current one
         inst = this;
     }
 
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_alarm_start_page);
+        setContentView(R.layout.activity_alarm_start_page);                             // sets the various buttons and other containers on the website
         alrmTimePicker = (TimePicker) findViewById(R.id.alarmTimePicker);
         ToggleButton alrmTogg = (ToggleButton) findViewById(R.id.toggleAlarmButton);
         alrmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
         alrmStatusView = (TextView) findViewById(R.id.alarmStatus);
 
-        setVolumeControlStream(AudioManager.STREAM_ALARM);
+        setVolumeControlStream(AudioManager.STREAM_ALARM);                              // sets the volume to be controlled to the audiomanager so that the user can control the alarm's volume
     }
 
     public void onToggleClicked(View view)
     {
         if (((ToggleButton) view).isChecked())
         {
-            Log.d("MyActivity", "Alarm On!");
-            int hourToSet, minuteToSet;
+            //Log.d("MyActivity", "Alarm On!");
+            int hourToSet, minuteToSet;                                                 // if the toggle button is pushed, then it creates an alarm. Otherwise it cancels a previously created alarm
             Calendar calendar = Calendar.getInstance();
-            if (Build.VERSION.SDK_INT >= 23)
+            if (Build.VERSION.SDK_INT >= 23)                                            // the code here and the one below in the else statement are identical except for which API they cater to
             {
                 hourToSet = alrmTimePicker.getHour();
-                minuteToSet = alrmTimePicker.getMinute();
+                minuteToSet = alrmTimePicker.getMinute();                               // gets the TimePicker's time that the user wants
+
                 // this is the code to actually do the "magic" of the REM time
-                int currhr = calendar.get(Calendar.HOUR_OF_DAY);
+                int currhr = calendar.get(Calendar.HOUR_OF_DAY);                        // gets the current time from the system's clock
                 int currmin = calendar.get(Calendar.MINUTE);
+
+                boolean lessThan90 = false;                                             // boolean to check if the current alarm is less than 90 Minutes away (1 REM cycle)
+                int hrDiff = 0;
+                int minDiff = 0;
+
+                if (hourToSet >= currhr)
+                {
+                    hrDiff = hourToSet - currhr;
+                    if(hrDiff == 0)
+                    {
+                        if (minuteToSet > currmin)                                      //
+                            minDiff = minuteToSet - currmin;
+                        else {
+                            hrDiff = 23;
+                            minDiff = 60-currmin + minuteToSet;
+                        }
+                    }
+                    else
+                        minDiff = 60 - currmin + minuteToSet;
+
+                    if (60*hrDiff + minDiff < 90)
+                        lessThan90 = true;
+                }
 
                 currmin+=15;
                 if (currmin >= 60)
@@ -78,44 +94,36 @@ public class AlarmStartPage extends Activity
                     currmin = currmin%60;
                     currhr++;
                     if (currhr >= 24)
-                    {
                         currhr = currhr%24;
-                    }
                 }
-                boolean lessThan90 = false;
-                int hrDiff = 0;
-                int minDiff = 0;
-                if (hourToSet >= currhr)
+                if (!lessThan90)
                 {
-                    hrDiff = hourToSet - currhr;
-                    if (hrDiff == 0)                // if the alarm is set for the same hour
+                    if (hourToSet >= currhr)
                     {
-                        if (minuteToSet > currmin)      // if the alarm is set for a later time (which means that it is less than 90 minutes away)
+                        hrDiff = hourToSet - currhr;
+                        if (hrDiff == 0)                // if the alarm is set for the same hour
                         {
-                            minDiff = minuteToSet - currmin;
+                            if (minuteToSet > currmin)      // if the alarm is set for a later time (which means that it is less than 90 minutes away)
+                                minDiff = minuteToSet - currmin;
+                            else                            // otherwise the alarm is set for 23 hours and some minutes away
+                            {
+                                minDiff = 60-currmin + minuteToSet;
+                                hrDiff = 23;                // 23 hours and minDiff away!
+                            }
                         }
-                        else                            // otherwise the alarm is set for 23 hours and some minutes away
-                        {
+                        else
                             minDiff = 60-currmin + minuteToSet;
-                            hrDiff = 23;                // 23 hours and minDiff away!
-                        }
                     }
-                    else
-                    {
-                        minDiff = 60-currmin + minuteToSet;
-                    }
+                    else if (hourToSet < currhr)
+                        hrDiff = 24-currhr + hourToSet;
                 }
-                else if (hourToSet < currhr)
-                {
-                    hrDiff = 24-currhr + hourToSet;
-                }
+
 
                 int totalMinutesInBetween = 60*hrDiff + minDiff;
 
                 if (totalMinutesInBetween < 90)
-                {
                     lessThan90 = true;
-                }
+
                 if (!lessThan90)            // If there are more than 90 minutes of difference, then a REM cycle is ACTUALLY possible
                 {
                     int possibleRem = totalMinutesInBetween/90;
@@ -130,9 +138,7 @@ public class AlarmStartPage extends Activity
                             currmin = currmin%60;
                             currhr++;
                             if (currhr >= 24)
-                            {
                                 currhr = currhr%24;
-                            }
                         }
                     }
                     hourToSet = currhr;
@@ -151,50 +157,65 @@ public class AlarmStartPage extends Activity
                 int currhr = calendar.get(Calendar.HOUR_OF_DAY);
                 int currmin = calendar.get(Calendar.MINUTE);
 
+                boolean lessThan90 = false;
+                int hrDiff = 0;
+                int minDiff = 0;
+
+                if (hourToSet >= currhr)
+                {
+                    hrDiff = hourToSet - currhr;
+                    if(hrDiff == 0)
+                    {
+                        if (minuteToSet > currmin)
+                            minDiff = minuteToSet - currmin;
+                        else {
+                            hrDiff = 23;
+                            minDiff = 60-currmin + minuteToSet;
+                        }
+                    }
+                    else
+                        minDiff = 60 - currmin + minuteToSet;
+
+                    if (60*hrDiff + minDiff < 90)
+                        lessThan90 = true;
+                }
+
                 currmin+=15;
                 if (currmin >= 60)
                 {
                     currmin = currmin%60;
                     currhr++;
                     if (currhr >= 24)
-                    {
                         currhr = currhr%24;
-                    }
                 }
-                boolean lessThan90 = false;
-                int hrDiff = 0;
-                int minDiff = 0;
-                if (hourToSet >= currhr)
+                if (!lessThan90)
                 {
-                    hrDiff = hourToSet - currhr;
-                    if (hrDiff == 0)                // if the alarm is set for the same hour
+                    if (hourToSet >= currhr)
                     {
-                        if (minuteToSet > currmin)      // if the alarm is set for a later time (which means that it is less than 90 minutes away)
+                        hrDiff = hourToSet - currhr;
+                        if (hrDiff == 0)                // if the alarm is set for the same hour
                         {
-                            minDiff = minuteToSet - currmin;
+                            if (minuteToSet > currmin)      // if the alarm is set for a later time (which means that it is less than 90 minutes away)
+                                minDiff = minuteToSet - currmin;
+                            else                            // otherwise the alarm is set for 23 hours and some minutes away
+                            {
+                                minDiff = 60-currmin + minuteToSet;
+                                hrDiff = 23;                // 23 hours and minDiff away!
+                            }
                         }
-                        else                            // otherwise the alarm is set for 23 hours and some minutes away
-                        {
+                        else
                             minDiff = 60-currmin + minuteToSet;
-                            hrDiff = 23;                // 23 hours and minDiff away!
-                        }
                     }
-                    else
-                    {
-                        minDiff = 60-currmin + minuteToSet;
-                    }
+                    else if (hourToSet < currhr)
+                        hrDiff = 24-currhr + hourToSet;
                 }
-                else if (hourToSet < currhr)
-                {
-                    hrDiff = 24-currhr + hourToSet;
-                }
+
 
                 int totalMinutesInBetween = 60*hrDiff + minDiff;
 
                 if (totalMinutesInBetween < 90)
-                {
                     lessThan90 = true;
-                }
+
                 if (!lessThan90)            // If there are more than 90 minutes of difference, then a REM cycle is ACTUALLY possible
                 {
                     int possibleRem = totalMinutesInBetween/90;
@@ -209,14 +230,13 @@ public class AlarmStartPage extends Activity
                             currmin = currmin%60;
                             currhr++;
                             if (currhr >= 24)
-                            {
                                 currhr = currhr%24;
-                            }
                         }
                     }
                     hourToSet = currhr;
                     minuteToSet = currmin;
                 }
+
                 calendar.set(Calendar.HOUR_OF_DAY, hourToSet);
                 calendar.set(Calendar.MINUTE, minuteToSet);
             }
@@ -224,25 +244,26 @@ public class AlarmStartPage extends Activity
             pendInt = PendingIntent.getBroadcast(AlarmStartPage.this, 0, myIntent, 0);
 
             alrmMgr.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendInt);
-            setAlarmText("An alarm has been placed for " + hourToSet + " hours and " + minuteToSet + " minutes (in military time). If you shut down" +
+            setAlarmText("An alarm has been placed for " + hourToSet + ":" + minuteToSet + " (in military time). If you shut down" +
                     " this app, please do not open it again until the alarm that you set is over (otherwise the app will reset itself).");
         }
         else
         {
-            alrmMgr.cancel(pendInt);
-            //stopService(myIntent);
-            setAlarmText("");
-            Log.d("MyActivity", "Alarm OFF");
+            alrmMgr.cancel(pendInt);                                                //cancels the current Intent (effectively stopping the alarm)
+            stopService(myIntent);
+            setAlarmText("The previous alarm was canceled.");                       // changes the text on the textbox under the time picker
+            //Log.d("MyActivity", "Alarm OFF");
         }
     }
 
     public void setAlarmText(String textToShow)
     {
-        alrmStatusView.setText(textToShow);
+        alrmStatusView.setText(textToShow);             // sets the text for the textbox below the TimePicker
     }
 
+    @Override
     public void onDestroy()
     {
-        super.onDestroy();
+        super.onDestroy();                              // calls the super classes destroy method to destroy the activity
     }
 }

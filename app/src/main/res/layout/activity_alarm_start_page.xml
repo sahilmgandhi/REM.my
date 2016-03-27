@@ -10,7 +10,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Adjust the clock below to the LATEST time that you wish to wake up. Then click the button below to create an alarm that is optimized to your REM sleep. The alarm takes into account that it will take you 15 minutes to fall asleep. Please turn your ringtone volume to the maximum."
+            android:text="Adjust the clock below to the LATEST time that you wish to wake up, then click the button  to create an alarm that is optimized to your REM sleep. The alarm takes into account that it will take you 15 minutes to fall asleep. Please increase your ringtone volume."
             android:id="@+id/Instructions"
             android:layout_gravity="right|top"
             android:gravity="center"
