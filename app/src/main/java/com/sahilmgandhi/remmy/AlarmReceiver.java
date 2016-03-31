@@ -24,29 +24,19 @@ public class AlarmReceiver extends WakefulBroadcastReceiver
     @Override
     public void onReceive(final Context context, Intent intent) {
 
-       /* AlarmStartPage inst = AlarmStartPage.instance();
-        inst.setAlarmText("Alarm is ringing!! Wake up!!");*/
 
-        //this will sound the alarm tone
-        //this will sound the alarm once, if you wish to
-        //raise alarm in loop continuously then use MediaPlayer and setLooping(true)
-        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+
+        Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);               //this will sound the alarm tone
+
         if (alarmUri == null) {
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
         Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
-        /*final AudioManager audioMgr = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-        int currVol = audioMgr.getStreamVolume(AudioManager.STREAM_RING);
 
-        int maxVol = audioMgr.getStreamMaxVolume(AudioManager.STREAM_RING);
+        ringtone.play();                                                                        // plays the ringtone of the phone as the alarm
 
-        audioMgr.setStreamVolume(AudioManager.STREAM_RING, AudioManager.ADJUST_RAISE, (maxVol-currVol));*/
-
-        ringtone.play();
-
-        //this will send a notification message
         ComponentName comp = new ComponentName(context.getPackageName(), AlarmService.class.getName());
-        startWakefulService(context, (intent.setComponent(comp)));
+        startWakefulService(context, (intent.setComponent(comp)));                              // sends the notification message and wakes up the phone
         setResultCode(Activity.RESULT_OK);
     }
 }

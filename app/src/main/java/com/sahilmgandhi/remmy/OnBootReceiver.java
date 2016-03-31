@@ -16,7 +16,7 @@ public class OnBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        AlarmManager aMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager aMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);          // allows previously created alarms to still exist on bootup.
         Intent i = new Intent(context, AlarmReceiver.class);
         PendingIntent pI = PendingIntent.getBroadcast(context, 0, i, 0);
 
