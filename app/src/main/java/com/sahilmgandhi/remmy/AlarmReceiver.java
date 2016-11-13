@@ -24,13 +24,12 @@ public class AlarmReceiver extends WakefulBroadcastReceiver
     @Override
     public void onReceive(final Context context, Intent intent) {
 
-
-
         Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);               //this will sound the alarm tone
 
-        if (alarmUri == null) {
+        if (alarmUri == null){
             alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         }
+
         Ringtone ringtone = RingtoneManager.getRingtone(context, alarmUri);
 
         ringtone.play();                                                                        // plays the ringtone of the phone as the alarm
