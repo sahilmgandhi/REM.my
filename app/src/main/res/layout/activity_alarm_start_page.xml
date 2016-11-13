@@ -6,20 +6,6 @@
     android:background="#80dcfe"
     tools:context="com.sahilmgandhi.remmy.AlarmStartPage">
 
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Adjust the clock below to the LATEST time that you wish to wake up, then click the button  to create an alarm that is optimized to your REM sleep. The alarm takes into account that it will take you 15 minutes to fall asleep. Please increase your ringtone volume."
-            android:id="@+id/Instructions"
-            android:layout_gravity="right|top"
-            android:gravity="center"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:textColor="#030303"
-            android:textSize="17dp"
-            android:textIsSelectable="false" />
-
     <ToggleButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,5 +34,19 @@
         android:layout_above="@+id/toggleAlarmButton"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Adjust the clock below to the LATEST time that you wish to wake up, then click the button  to create an alarm that is optimized to your REM sleep. The alarm takes into account that it will take you 15 minutes to fall asleep. Please increase your ringtone volume."
+            android:id="@+id/Instructions"
+            android:layout_gravity="right|top"
+            android:gravity="center"
+        android:textColor="#030303"
+            android:textSize="17dp"
+            android:textIsSelectable="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
