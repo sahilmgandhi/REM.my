@@ -6,4 +6,4 @@ To further optimize the user's sleep, the app takes into account that it will ta
 
 **Note**: If it seems to be waking you up MUCH earlier than the time that you set (ie 70 or 80 or even 85 minutes earlier), I encourage you to *either* enjoy that extra early time that you are awake by excercising, catching up on T.V., reading a book, or whatever else you feel like (the early morning is a wonderful time), *or* to turn off the alarm and increase the "latest time that you want to wake up" by the approipate time (ie. 20, 10 or 5 minutes in the example above) so that you wake up at the end of the REM cycle!
 
-More features to come soon, but shoot me an email or message if you want any particular features added! Furthermore, this app will be available in the Google Play Store soon!
+More features to come soon, but shoot me an email or message if you want any particular features added! This app is now live on the Play Store!
