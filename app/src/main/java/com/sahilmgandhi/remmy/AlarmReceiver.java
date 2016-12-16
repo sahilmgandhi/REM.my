@@ -21,6 +21,8 @@ import android.util.Log;
  * Created by Sahil on 3/23/2016.
  */
 public class AlarmReceiver extends BroadcastReceiver {
+    public static final int REQUEST_CODE = 111;
+
     @Override
     public void onReceive(Context context, Intent intent) {
 

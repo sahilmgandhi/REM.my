@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.view.View;
 import android.widget.TimePicker;
 
@@ -51,6 +52,7 @@ public class AlarmStartPage extends Activity {
             Log.d("MyActivity", "Alarm On!");
             int hourToSet, minuteToSet;                                                 // if the toggle button is pushed, then it creates an alarm. Otherwise it cancels a previously created alarm
             Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
             if (Build.VERSION.SDK_INT >= 23)                                            // the code here and the one below in the else statement are identical except for which API they cater to
             {
                 hourToSet = alrmTimePicker.getHour();
@@ -149,10 +151,17 @@ public class AlarmStartPage extends Activity {
             calendar.set(Calendar.HOUR_OF_DAY, hourToSet);                          // the calendar sets the final REM time
             calendar.set(Calendar.MINUTE, minuteToSet);
 
-            myIntent = new Intent(AlarmStartPage.this, AlarmReceiver.class);
-            pendInt = PendingIntent.getBroadcast(AlarmStartPage.this, 0, myIntent, 0);             // new intent as well as a pending intent to notify the system of the alarm (uses Alarm Receiver and Alarm Service)
+            myIntent = new Intent(this, AlarmReceiver.class);
+            //pendInt = PendingIntent.getBroadcast(this, 0, myIntent, 0);             // new intent as well as a pending intent to notify the system of the alarm (uses Alarm Receiver and Alarm Service)
+            pendInt = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
             alrmMgr.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendInt);                     // alarmmanager is used to set the alarm
+
+            Intent openNewAlarm = new Intent(AlarmClock.ACTION_SET_ALARM);
+            openNewAlarm.putExtra(AlarmClock.EXTRA_HOUR, hourToSet);
+            openNewAlarm.putExtra(AlarmClock.EXTRA_MINUTES, minuteToSet);
+            startActivity(openNewAlarm);
             if (minuteToSet > 9)
                 setAlarmText("An alarm has been placed for " + hourToSet + ":" + minuteToSet + " (in military time). If you shut down" +
                         " this app, please do not open it again until the alarm that you set is over (otherwise the alarm will reset itself).");    // alarm text is changed to notify the user
@@ -169,10 +178,5 @@ public class AlarmStartPage extends Activity {
 
     public void setAlarmText(String textToShow) {
         alrmStatusView.setText(textToShow);             // sets the text for the textbox below the TimePicker
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();                              // calls the super classes destroy method to destroy the activity
     }
 }
