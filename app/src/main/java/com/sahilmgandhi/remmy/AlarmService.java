@@ -5,6 +5,7 @@ package com.sahilmgandhi.remmy;
  */
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -34,13 +35,21 @@ public class AlarmService extends IntentService {
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, AlarmStartPage.class), 0);                        // creates the notification and sets the icon for the notification
 
+        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         NotificationCompat.Builder alarmNotificationBuilder = new NotificationCompat.Builder(
-                this).setContentTitle("Alarm").setSmallIcon(R.mipmap.ic_launcher).setStyle(new NotificationCompat.BigTextStyle().bigText(msg)).setContentText(msg);
-
+                this)
+                .setContentTitle("Alarm")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+                .setContentText(msg)
+                .setSound(soundUri);
 
         alarmNotificationBuilder.setContentIntent(contentIntent);
 
-        alarmNotificationManager.notify(1, alarmNotificationBuilder.build());
+        Notification note = alarmNotificationBuilder.build();
+        note.flags |= Notification.FLAG_INSISTENT;
+
+        alarmNotificationManager.notify(1, note);
         Log.d("AlarmService", "Notification sent.");
     }
 }

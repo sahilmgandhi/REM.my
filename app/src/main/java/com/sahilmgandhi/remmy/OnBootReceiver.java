@@ -14,9 +14,8 @@ public class OnBootReceiver extends BroadcastReceiver {
     private static final int WAITING_PERIOD = 10000;    // 10 seconds (aka 10000 milliseconds)
 
     @Override
-    public void onReceive(Context context, Intent intent)
-    {
-        AlarmManager aMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);          // allows previously created alarms to still exist on bootup.
+    public void onReceive(Context context, Intent intent) {
+        AlarmManager aMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);          // allows previously created alarms to still exist on bootup.
         Intent i = new Intent(context, AlarmReceiver.class);
         PendingIntent pI = PendingIntent.getBroadcast(context, 0, i, 0);
 
