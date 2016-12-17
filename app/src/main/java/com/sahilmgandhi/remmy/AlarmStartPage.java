@@ -8,6 +8,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.AlarmClock;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.TimePicker;
 
@@ -17,6 +18,9 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+/**
+ * Created by Sahil on 3/23/2016.
+ */
 
 public class AlarmStartPage extends Activity {
     AlarmManager alrmMgr;
@@ -25,6 +29,7 @@ public class AlarmStartPage extends Activity {
     private static AlarmStartPage inst;
     Intent myIntent;
     private TextView alrmStatusView;
+    FloatingActionButton startFab;
 
     protected static AlarmStartPage instance() {
         return inst;                                        // returns an instance of the current Activity
@@ -43,6 +48,7 @@ public class AlarmStartPage extends Activity {
         ToggleButton alrmTogg = (ToggleButton) findViewById(R.id.toggleAlarmButton);
         alrmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
         alrmStatusView = (TextView) findViewById(R.id.alarmStatus);
+        startFab = (FloatingActionButton) findViewById(R.id.floatingActionButton1);
 
         setVolumeControlStream(AudioManager.STREAM_ALARM);                              // sets the volume to be controlled to the audiomanager so that the user can control the alarm's volume
     }
@@ -158,10 +164,11 @@ public class AlarmStartPage extends Activity {
 
             alrmMgr.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendInt);                     // alarmmanager is used to set the alarm
 
-            Intent openNewAlarm = new Intent(AlarmClock.ACTION_SET_ALARM);
-            openNewAlarm.putExtra(AlarmClock.EXTRA_HOUR, hourToSet);
-            openNewAlarm.putExtra(AlarmClock.EXTRA_MINUTES, minuteToSet);
-            startActivity(openNewAlarm);
+//            Intent openNewAlarm = new Intent(AlarmClock.ACTION_SET_ALARM);
+//            openNewAlarm.putExtra(AlarmClock.EXTRA_HOUR, hourToSet);
+//            openNewAlarm.putExtra(AlarmClock.EXTRA_MINUTES, minuteToSet);
+//            startActivity(openNewAlarm);
+
             if (minuteToSet > 9)
                 setAlarmText("An alarm has been placed for " + hourToSet + ":" + minuteToSet + " (in military time). If you shut down" +
                         " this app, please do not open it again until the alarm that you set is over (otherwise the alarm will reset itself).");    // alarm text is changed to notify the user

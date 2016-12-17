@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#80dcfe"
     tools:context="com.sahilmgandhi.remmy.AlarmStartPage">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Adjust the clock below to the LATEST time that you wish to wake up, then click the button  to create an alarm that is optimized to your REM sleep. The alarm takes into account that it will take you 15 minutes to fall asleep. Please increase your ringtone volume."
+        android:id="@+id/Instructions"
+        android:layout_gravity="right|top"
+        android:gravity="center"
+        android:textColor="#030303"
+        android:textSize="17sp"
+        android:textIsSelectable="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <ToggleButton
         android:layout_width="wrap_content"
@@ -25,28 +39,37 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="This text will change once you set a timer."
         android:id="@+id/alarmStatus"
         android:gravity="center"
         android:textColor="#070707"
         android:textIsSelectable="false"
         android:layout_above="@+id/toggleAlarmButton"
+        android:textSize="17sp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Adjust the clock below to the LATEST time that you wish to wake up, then click the button  to create an alarm that is optimized to your REM sleep. The alarm takes into account that it will take you 15 minutes to fall asleep. Please increase your ringtone volume."
-            android:id="@+id/Instructions"
-            android:layout_gravity="right|top"
-            android:gravity="center"
-        android:textColor="#030303"
-            android:textSize="17dp"
-            android:textIsSelectable="false"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@android:drawable/ic_menu_add"
+        android:layout_below="@id/alarmTimePicker"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="100dp"
+        android:id="@+id/floatingActionButton1" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@android:drawable/ic_menu_delete"
+        android:layout_above="@+id/alarmStatus"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="100dp"
+        android:id="@+id/floatingActionButton2" />
+
 
 </RelativeLayout>

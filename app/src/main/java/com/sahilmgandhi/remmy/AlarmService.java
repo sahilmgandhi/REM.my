@@ -42,12 +42,16 @@ public class AlarmService extends IntentService {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                 .setContentText(msg)
-                .setSound(soundUri);
+                .setSound(soundUri)
+                .setVibrate(new long[] {1000,1000});
 
         alarmNotificationBuilder.setContentIntent(contentIntent);
 
         Notification note = alarmNotificationBuilder.build();
         note.flags |= Notification.FLAG_INSISTENT;
+        note.flags |= Notification.FLAG_AUTO_CANCEL;
+        note.flags |= Notification.VISIBILITY_PUBLIC;
+        note.flags |= Notification.PRIORITY_MAX;
 
         alarmNotificationManager.notify(1, note);
         Log.d("AlarmService", "Notification sent.");
