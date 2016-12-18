@@ -25,7 +25,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         Intent service_intent = new Intent(context, AlarmService.class);
         context.startService(service_intent);
         ComponentName comp = new ComponentName(context.getPackageName(), AlarmService.class.getName());

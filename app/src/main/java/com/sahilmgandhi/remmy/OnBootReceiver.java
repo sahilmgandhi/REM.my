@@ -6,11 +6,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
 /**
  * Created by Sahil on 3/23/2016.
  */
-public class OnBootReceiver extends BroadcastReceiver {
+public class OnBootReceiver extends WakefulBroadcastReceiver {
     private static final int WAITING_PERIOD = 10000;    // 10 seconds (aka 10000 milliseconds)
 
     @Override

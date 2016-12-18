@@ -156,6 +156,7 @@ public class AlarmStartPage extends Activity {
 
             calendar.set(Calendar.HOUR_OF_DAY, hourToSet);                          // the calendar sets the final REM time
             calendar.set(Calendar.MINUTE, minuteToSet);
+            calendar.set(Calendar.SECOND, 0);
 
             myIntent = new Intent(this, AlarmReceiver.class);
             //pendInt = PendingIntent.getBroadcast(this, 0, myIntent, 0);             // new intent as well as a pending intent to notify the system of the alarm (uses Alarm Receiver and Alarm Service)

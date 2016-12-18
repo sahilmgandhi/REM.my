@@ -16,9 +16,11 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 public class AlarmService extends IntentService {
     private NotificationManager alarmNotificationManager;
+    Ringtone ringtone;
 
     public AlarmService() {
         super("AlarmService");
@@ -42,8 +44,8 @@ public class AlarmService extends IntentService {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
                 .setContentText(msg)
-                .setSound(soundUri)
-                .setVibrate(new long[] {1000,1000});
+                .setVibrate(new long[] {1000,1000})
+                .setSound(soundUri);
 
         alarmNotificationBuilder.setContentIntent(contentIntent);
 
@@ -54,6 +56,5 @@ public class AlarmService extends IntentService {
         note.flags |= Notification.PRIORITY_MAX;
 
         alarmNotificationManager.notify(1, note);
-        Log.d("AlarmService", "Notification sent.");
     }
 }
