@@ -2,4 +2,5 @@
     <string name="app_name">REM.my</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="instructionsText">Adjust the clock below to the LATEST time that you wish to wake up, then click the button  to create an alarm that is optimized to your REM sleep. The alarm takes into account that it will take you 15 minutes to fall asleep. Please increase your ringtone volume, and if on Priority Mode, set the application\'s notification to "allowed in priority mode".</string>
 </resources>
