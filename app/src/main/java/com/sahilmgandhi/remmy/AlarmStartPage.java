@@ -2,7 +2,11 @@ package com.sahilmgandhi.remmy;
 
 import android.app.Activity;                            // all the imports that my application needs to run smoothly
 import android.app.AlarmManager;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Build;
@@ -10,12 +14,14 @@ import android.os.Bundle;
 import android.provider.AlarmClock;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
 
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 /**
@@ -25,11 +31,15 @@ import android.widget.ToggleButton;
 public class AlarmStartPage extends Activity {
     AlarmManager alrmMgr;
     PendingIntent pendInt;                          // initialize all the private member variables required for the app
-    private TimePicker alrmTimePicker;
     private static AlarmStartPage inst;
     Intent myIntent;
     private TextView alrmStatusView;
     FloatingActionButton startFab;
+    FloatingActionButton deletePrevAlarmFab;
+    DialogFragment timeFragment;
+    private Calendar calendar;
+    private int hourToSet;
+    private int minuteToSet;
 
     protected static AlarmStartPage instance() {
         return inst;                                        // returns an instance of the current Activity
@@ -44,29 +54,61 @@ public class AlarmStartPage extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_start_page);                             // sets the various buttons and other containers on the website
-        alrmTimePicker = (TimePicker) findViewById(R.id.alarmTimePicker);
-        ToggleButton alrmTogg = (ToggleButton) findViewById(R.id.toggleAlarmButton);
         alrmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
         alrmStatusView = (TextView) findViewById(R.id.alarmStatus);
+        calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        deletePrevAlarmFab = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
+        deletePrevAlarmFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deletePrevAlarm();
+            }
+        });
+
         startFab = (FloatingActionButton) findViewById(R.id.floatingActionButton1);
+        startFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog();
+            }
+        });
 
         setVolumeControlStream(AudioManager.STREAM_ALARM);                              // sets the volume to be controlled to the audiomanager so that the user can control the alarm's volume
     }
 
+    public void showTimePickerDialog() {
+        timeFragment = new TimePickerFragment();
+        timeFragment.show(getFragmentManager(), "timePicker");
+    }
+
+    public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Create a new instance of DatePickerDialog and return it
+            TimePickerDialog dialog = new TimePickerDialog(getActivity(), this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
+            return dialog;
+        }
+
+        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+            //fill this with code later.
+            minuteToSet = selectedMinute;
+            hourToSet = selectedHour;
+            startFab.setEnabled(false);
+            deletePrevAlarmFab.setEnabled(true);
+        }
+
+    }
+
+
     public void onToggleClicked(View view) {
         if (((ToggleButton) view).isChecked()) {
             Log.d("MyActivity", "Alarm On!");
-            int hourToSet, minuteToSet;                                                 // if the toggle button is pushed, then it creates an alarm. Otherwise it cancels a previously created alarm
+            // if the toggle button is pushed, then it creates an alarm. Otherwise it cancels a previously created alarm
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            if (Build.VERSION.SDK_INT >= 23)                                            // the code here and the one below in the else statement are identical except for which API they cater to
-            {
-                hourToSet = alrmTimePicker.getHour();
-                minuteToSet = alrmTimePicker.getMinute();                               // gets the TimePicker's time that the user wants if using Android Marshmallow
-            } else {
-                hourToSet = alrmTimePicker.getCurrentHour();                            // gets the TimePicker's time that the user wants if using any Android Lolipop or below
-                minuteToSet = alrmTimePicker.getCurrentMinute();
-            }
+
             // this is the code to actually do the "magic" of the REM time
             int currhr = calendar.get(Calendar.HOUR_OF_DAY);                        // gets the current time from the system's clock
             int currmin = calendar.get(Calendar.MINUTE);
@@ -159,6 +201,8 @@ public class AlarmStartPage extends Activity {
             calendar.set(Calendar.SECOND, 0);
 
             myIntent = new Intent(this, AlarmReceiver.class);
+            myIntent.putExtra("Hours", String.valueOf(hourToSet));
+            myIntent.putExtra("Minutes", String.valueOf(minuteToSet));
             //pendInt = PendingIntent.getBroadcast(this, 0, myIntent, 0);             // new intent as well as a pending intent to notify the system of the alarm (uses Alarm Receiver and Alarm Service)
             pendInt = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -184,7 +228,17 @@ public class AlarmStartPage extends Activity {
         }
     }
 
-    public void setAlarmText(String textToShow) {
+    private void deletePrevAlarm()
+    {
+        alrmMgr.cancel(pendInt);                                                //cancels the current Intent (effectively stopping the alarm)
+        stopService(myIntent);
+        String hourText = myIntent.getExtras().getString("Hours");
+        String minuteText = myIntent.getExtras().getString("Minutes");
+        Toast.makeText(this, "Canceled the alarm at " + hourText + ":" + minuteText, Toast.LENGTH_LONG).show();
+        setAlarmText("The previous alarm was canceled.");                       // changes the text on the textbox under the time picker
+    }
+
+    private void setAlarmText(String textToShow) {
         alrmStatusView.setText(textToShow);             // sets the text for the textbox below the TimePicker
     }
 }
