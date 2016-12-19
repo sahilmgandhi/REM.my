@@ -11,6 +11,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.provider.AlarmClock;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TimePicker;
 
@@ -85,6 +86,7 @@ public class AlarmStartPage extends Activity {
     }
 
     public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Create a new instance of DatePickerDialog and return it
@@ -205,13 +207,15 @@ public class AlarmStartPage extends Activity {
 
         alrmMgr.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendInt);                     // alarmmanager is used to set the alarm
 
-        int properHourTime = hourToSet % 12 + 1;
+        int properHourTime = calendar.get(Calendar.HOUR);
+        boolean isMorning = true;
+        if (hourToSet > 11)
+            isMorning = false;
+
         if (minuteToSet > 9)
-            setAlarmText("An alarm has been placed for " + hourToSet + ":" + minuteToSet + " (in military time). If you shut down" +
-                    " this app, please do not open it again until the alarm that you set is over (otherwise the alarm will reset itself).");    // alarm text is changed to notify the user
+            setAlarmText(properHourTime + ":" + minuteToSet, isMorning);
         else
-            setAlarmText("An alarm has been placed for " + hourToSet + ":0" + minuteToSet + " (in military time). If you shut down" +
-                    " this app, please do not open it again until the alarm that you set is over (otherwise the alarm will reset itself).");
+            setAlarmText(properHourTime + ":0" + minuteToSet, isMorning);
         alarmSet = true;
     }
 
@@ -222,15 +226,21 @@ public class AlarmStartPage extends Activity {
             String hourText = myIntent.getExtras().getString("Hours");
             String minuteText = myIntent.getExtras().getString("Minutes");
             Toast.makeText(this, "Canceled the alarm at " + hourText + ":" + minuteText, Toast.LENGTH_LONG).show();
-            setAlarmText("The previous alarm was canceled.");                       // changes the text on the textbox under the time picker
+            alrmStatusView.setText(R.string.initAlarmText);                       // changes the text on the textbox under the time picker
 
             startFab.setEnabled(true);
             deletePrevAlarmFab.setEnabled(false);
         }
     }
 
-    private void setAlarmText(String textToShow) {
-        alrmStatusView.setText(textToShow);             // sets the text for the textbox below the TimePicker
+    private void setAlarmText(String textToShow, boolean amOrPm) {
+        if (amOrPm) {
+            textToShow += " AM";
+            alrmStatusView.setText(textToShow);             // sets the text for the textbox below the TimePicker
+        } else {
+            textToShow += " PM";
+            alrmStatusView.setText(textToShow);
+        }
     }
 }
 
@@ -238,3 +248,6 @@ public class AlarmStartPage extends Activity {
 //            openNewAlarm.putExtra(AlarmClock.EXTRA_HOUR, hourToSet);
 //            openNewAlarm.putExtra(AlarmClock.EXTRA_MINUTES, minuteToSet);
 //            startActivity(openNewAlarm);
+
+//    setAlarmText("An alarm has been placed for " + hourToSet + ":" + minuteToSet + " (in military time). If you shut down" +
+//                    " this app, please do not open it again until the alarm that you set is over (otherwise the alarm will reset itself).");    // alarm text is changed to notify the user
