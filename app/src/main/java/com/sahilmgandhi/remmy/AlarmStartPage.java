@@ -7,17 +7,18 @@ import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.provider.AlarmClock;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.TimePicker;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Calendar;
 
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,18 +27,22 @@ import android.widget.Toast;
  */
 
 public class AlarmStartPage extends Activity {
-    AlarmManager alrmMgr;
-    PendingIntent pendInt;                          // initialize all the private member variables required for the app
+    private AlarmManager alarmManager;
+    private PendingIntent pendInt;                          // initialize all the private member variables required for the app
     private static AlarmStartPage inst;
-    Intent myIntent;
-    private TextView alrmStatusView;
-    FloatingActionButton startFab;
-    FloatingActionButton deletePrevAlarmFab;
-    DialogFragment timeFragment;
+    private Intent myIntent;
+    private TextView alarmStatusView;
+    private FloatingActionButton startFab;
+    private FloatingActionButton deletePrevAlarmFab;
+    private DialogFragment timeFragment;
+
     private Calendar calendar;
     private int hourToSet;
     private int minuteToSet;
     private boolean alarmSet = false;
+
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     protected static AlarmStartPage instance() {
         return inst;                                        // returns an instance of the current Activity
@@ -52,16 +57,20 @@ public class AlarmStartPage extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_start_page);                             // sets the various buttons and other containers on the website
-        alrmMgr = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alrmStatusView = (TextView) findViewById(R.id.alarmStatus);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmStatusView = (TextView) findViewById(R.id.alarmStatus);
         calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         TextView instructions = (TextView) findViewById(R.id.Instructions);
         instructions.setText(R.string.instructionsText);
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = sharedPreferences.edit();
+        restoreSavedSharedPreferences();
+
         deletePrevAlarmFab = (FloatingActionButton) findViewById(R.id.floatingActionButton2);
-        deletePrevAlarmFab.setEnabled(false);
+        deletePrevAlarmFab.setEnabled(alarmSet);
         deletePrevAlarmFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +79,7 @@ public class AlarmStartPage extends Activity {
         });
 
         startFab = (FloatingActionButton) findViewById(R.id.floatingActionButton1);
+        startFab.setEnabled(!alarmSet);
         startFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,21 +100,22 @@ public class AlarmStartPage extends Activity {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Create a new instance of DatePickerDialog and return it
-            TimePickerDialog dialog = new TimePickerDialog(getActivity(), this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-            return dialog;
+            return new TimePickerDialog(getActivity(), this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
         }
 
         public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
             //fill this with code later.
             minuteToSet = selectedMinute;
             hourToSet = selectedHour;
-            startFab.setEnabled(false);
-            deletePrevAlarmFab.setEnabled(true);
+            alarmSet = true;
+            startFab.setEnabled((!alarmSet));
+            deletePrevAlarmFab.setEnabled(alarmSet);
+            addAlarmSetToSharedPreferences(alarmSet);
             setAlarm();
         }
     }
 
-    public void setAlarm() {
+    private void setAlarm() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
@@ -204,44 +215,79 @@ public class AlarmStartPage extends Activity {
         //pendInt = PendingIntent.getBroadcast(this, 0, myIntent, 0);             // new intent as well as a pending intent to notify the system of the alarm (uses Alarm Receiver and Alarm Service)
         pendInt = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-
-        alrmMgr.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendInt);                     // alarmmanager is used to set the alarm
+        addIntentToSharedPreferences(myIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendInt);                     // alarmmanager is used to set the alarm
 
         int properHourTime = calendar.get(Calendar.HOUR);
         boolean isMorning = true;
         if (hourToSet > 11)
             isMorning = false;
-
+        String alarmText;
         if (minuteToSet > 9)
-            setAlarmText(properHourTime + ":" + minuteToSet, isMorning);
+            alarmText = properHourTime + ":" + minuteToSet;
         else
-            setAlarmText(properHourTime + ":0" + minuteToSet, isMorning);
-        alarmSet = true;
+            alarmText = properHourTime + ":0" + minuteToSet;
+        if (isMorning)
+            alarmText += " AM";
+        else
+            alarmText += " PM";
+
+        setAlarmText(alarmText);
+        addAlarmToSharedPreferences(hourToSet, minuteToSet, alarmText);
     }
 
     private void deletePrevAlarm() {
         if (alarmSet) {
-            alrmMgr.cancel(pendInt);                                                //cancels the current Intent (effectively stopping the alarm)
+            alarmManager.cancel(pendInt);                                                //cancels the current Intent (effectively stopping the alarm)
             stopService(myIntent);
             String hourText = myIntent.getExtras().getString("Hours");
             String minuteText = myIntent.getExtras().getString("Minutes");
             Toast.makeText(this, "Canceled the alarm at " + hourText + ":" + minuteText, Toast.LENGTH_LONG).show();
-            alrmStatusView.setText(R.string.initAlarmText);                       // changes the text on the textbox under the time picker
+            alarmStatusView.setText(R.string.initAlarmText);                       // changes the text on the textbox under the time picker
 
-            startFab.setEnabled(true);
-            deletePrevAlarmFab.setEnabled(false);
+            alarmSet = false;
+            startFab.setEnabled(!alarmSet);
+            deletePrevAlarmFab.setEnabled(alarmSet);
+            addAlarmSetToSharedPreferences(alarmSet);
         }
     }
 
-    private void setAlarmText(String textToShow, boolean amOrPm) {
-        if (amOrPm) {
-            textToShow += " AM";
-            alrmStatusView.setText(textToShow);             // sets the text for the textbox below the TimePicker
-        } else {
-            textToShow += " PM";
-            alrmStatusView.setText(textToShow);
+    private void setAlarmText(String textToShow) {
+        alarmStatusView.setText(textToShow);
+    }
+
+    private void restoreSavedSharedPreferences() {
+        alarmSet = sharedPreferences.getBoolean("alarmSet", false);
+        hourToSet = sharedPreferences.getInt("HourToSet", 0);
+        minuteToSet = sharedPreferences.getInt("MinuteToSet", 0);
+        String uriString = sharedPreferences.getString("Intent", null);
+
+        if (alarmSet) {
+            try {
+                myIntent = Intent.parseUri(uriString,0);
+                pendInt = PendingIntent.getBroadcast(this, AlarmReceiver.REQUEST_CODE, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                String textToShow = sharedPreferences.getString("textToShow", null);
+                alarmStatusView.setText(textToShow);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    private void addAlarmSetToSharedPreferences(boolean alrmSet) {
+        editor.putBoolean("alarmSet", alrmSet).apply();
+    }
+
+    private void addAlarmToSharedPreferences(int hour, int minute, String textToShow) {
+        editor.putInt("HourToSet", hour).apply();
+        editor.putInt("MinuteToSet", minute).apply();
+        editor.putString("textToShow", textToShow).apply();
+    }
+
+    private void addIntentToSharedPreferences(Intent mIntent) {
+        editor.putString("Intent", mIntent.toUri(0)).apply();
+    }
+
 }
 
 //            Intent openNewAlarm = new Intent(AlarmClock.ACTION_SET_ALARM);
