@@ -9,17 +9,26 @@
 
     <TextView
         android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/topBar"
+        android:textSize="25sp"
+        android:textIsSelectable="false"
+        android:text="@string/titleBarText"
+        android:gravity="center"
+        android:textColor="@color/backGround"
+        android:background="@color/colorPrimary"/>
+
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/topBar"
         android:text=""
         android:id="@+id/Instructions"
-        android:layout_gravity="right|top"
         android:gravity="center"
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textIsSelectable="false"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="15dp"/>
+        android:layout_marginTop="12dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +36,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="430dp"
+        android:layout_marginTop="435dp"
         android:layout_alignParentStart="true">
 
         <android.support.design.widget.FloatingActionButton
@@ -58,8 +67,8 @@
         android:gravity="center"
         android:textColor="@color/colorPrimary"
         android:textIsSelectable="false"
-        android:textSize="70sp"
-        android:layout_marginTop="300dp"
+        android:textSize="80sp"
+        android:layout_marginTop="310dp"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

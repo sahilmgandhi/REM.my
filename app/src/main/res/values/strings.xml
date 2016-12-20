@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">REM.my - A Smarter Alarm System</string>
+    <string name="app_name">REM.my</string>
+    <string name="titleBarText">REM.my - A Smarter Alarm System</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="instructionsText">Click on the plus icon to set an alarm for the LATEST time that you wish to wake up. The alarm takes into account that it will take you 15 minutes to fall asleep. Please increase your notification volume, and if on Priority Mode, allow the app\'s notification to make sound in this mode.</string>

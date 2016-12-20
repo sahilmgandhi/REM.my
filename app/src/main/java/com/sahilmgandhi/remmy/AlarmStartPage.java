@@ -27,7 +27,7 @@ import android.widget.Toast;
  * Created by Sahil on 3/23/2016.
  */
 
-public class AlarmStartPage extends AppCompatActivity {
+public class AlarmStartPage extends Activity {
     private AlarmManager alarmManager;
     private PendingIntent pendInt;                          // initialize all the private member variables required for the app
     private static AlarmStartPage inst;
