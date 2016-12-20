@@ -1,5 +1,6 @@
 package com.sahilmgandhi.remmy;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;                            // all the imports that my application needs to run smoothly
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -96,6 +97,7 @@ public class AlarmStartPage extends Activity {
         timeFragment.show(getFragmentManager(), "timePicker");
     }
 
+    @SuppressLint("ValidFragment")
     public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
         @Override
