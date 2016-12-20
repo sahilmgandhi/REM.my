@@ -12,6 +12,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TimePicker;
 
@@ -26,7 +27,7 @@ import android.widget.Toast;
  * Created by Sahil on 3/23/2016.
  */
 
-public class AlarmStartPage extends Activity {
+public class AlarmStartPage extends AppCompatActivity {
     private AlarmManager alarmManager;
     private PendingIntent pendInt;                          // initialize all the private member variables required for the app
     private static AlarmStartPage inst;

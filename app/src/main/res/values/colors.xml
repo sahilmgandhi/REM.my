@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#64B5F6</color>
-    <color name="colorPrimaryDark">#1E88E5</color>
-    <color name="colorAccent">#333333</color>
+    <color name="colorPrimary">#0288D1</color>
+    <color name="colorPrimaryDark">#01579B</color>
+    <color name="colorAccent">#1565C0</color>
     <color name="backGround">#FFFFFF</color>
+    <color name="trashBackground">#C62828</color>
+    <color name="addFabColor">#1565C0</color>
 
     <color name="black_overlay">#66000000</color>
     <color name="foreground_material_dark">#f21616</color>
