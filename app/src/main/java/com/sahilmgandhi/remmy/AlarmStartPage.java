@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Time;
 import android.view.View;
 import android.widget.TimePicker;
 
@@ -28,7 +29,7 @@ import android.widget.Toast;
  * Created by Sahil on 3/23/2016.
  */
 
-public class AlarmStartPage extends Activity {
+public class AlarmStartPage extends Activity implements TimeSetListener {
     private AlarmManager alarmManager;
     private PendingIntent pendInt;                          // initialize all the private member variables required for the app
     private static AlarmStartPage inst;
@@ -36,7 +37,7 @@ public class AlarmStartPage extends Activity {
     private TextView alarmStatusView;
     private FloatingActionButton startFab;
     private FloatingActionButton deletePrevAlarmFab;
-    private DialogFragment timeFragment;
+    private TimePickerFragment timeFragment;
 
     private Calendar calendar;
     private int hourToSet;
@@ -94,28 +95,18 @@ public class AlarmStartPage extends Activity {
 
     public void showTimePickerDialog() {
         timeFragment = new TimePickerFragment();
+        timeFragment.setListener(this);
         timeFragment.show(getFragmentManager(), "timePicker");
     }
 
-    @SuppressLint("ValidFragment")
-    public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Create a new instance of DatePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-        }
-
-        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-            //fill this with code later.
-            minuteToSet = selectedMinute;
-            hourToSet = selectedHour;
-            alarmSet = true;
-            startFab.setEnabled((!alarmSet));
-            deletePrevAlarmFab.setEnabled(alarmSet);
-            addAlarmSetToSharedPreferences(alarmSet);
-            setAlarm();
-        }
+    public void setTime(int selectedHour, int selectedMinute){
+        minuteToSet = selectedMinute;
+        hourToSet = selectedHour;
+        alarmSet = true;
+        startFab.setEnabled((!alarmSet));
+        deletePrevAlarmFab.setEnabled(alarmSet);
+        addAlarmSetToSharedPreferences(alarmSet);
+        setAlarm();
     }
 
     private void setAlarm() {
@@ -291,6 +282,19 @@ public class AlarmStartPage extends Activity {
         editor.putString("Intent", mIntent.toUri(0)).apply();
     }
 
+    @Override
+    public void onTimeSet(int selectedHour, int selectedMinute) {
+        setTime(selectedHour, selectedMinute);
+
+        minuteToSet = selectedMinute;
+        hourToSet = selectedHour;
+        alarmSet = true;
+        startFab.setEnabled((!alarmSet));
+        deletePrevAlarmFab.setEnabled(alarmSet);
+        addAlarmSetToSharedPreferences(alarmSet);
+        setAlarm();
+
+    }
 }
 
 //            Intent openNewAlarm = new Intent(AlarmClock.ACTION_SET_ALARM);
