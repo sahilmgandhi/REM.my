@@ -285,15 +285,6 @@ public class AlarmStartPage extends Activity implements TimeSetListener {
     @Override
     public void onTimeSet(int selectedHour, int selectedMinute) {
         setTime(selectedHour, selectedMinute);
-
-        minuteToSet = selectedMinute;
-        hourToSet = selectedHour;
-        alarmSet = true;
-        startFab.setEnabled((!alarmSet));
-        deletePrevAlarmFab.setEnabled(alarmSet);
-        addAlarmSetToSharedPreferences(alarmSet);
-        setAlarm();
-
     }
 }
 
